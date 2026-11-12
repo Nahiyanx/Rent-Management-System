@@ -14,9 +14,15 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
         <meta name="theme-color" content="#200e01">
-        <meta name="description" content="Aangan is a calm, personal ledger for property finances.">
+        <meta name="description" content="Rentra is a calm, personal ledger for property finances.">
 
-        <title>{{ isset($title) ? $title.' · Aangan' : 'Aangan · Property Accounts' }}</title>
+        <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/favicon-16x16.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="48x48" href="{{ asset('images/favicon-48x48.png') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/apple-touch-icon.png') }}">
+
+        <title>{{ isset($title) ? $title.' · Rentra' : 'Rentra · Property Accounts' }}</title>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
@@ -37,11 +43,11 @@
             <aside class="sidebar-surface fixed inset-y-0 left-0 z-40 hidden w-[276px] flex-col text-cream lg:flex">
                 <div class="flex h-full flex-col px-5 py-7">
                     <a href="{{ route('dashboard') }}" wire:navigate class="group flex items-center gap-3 px-2">
-                        <span class="grid h-10 w-10 place-items-center rounded-2xl border border-cream/10 bg-cream/[0.055] text-cream/90 transition duration-200 group-hover:bg-cream/[0.09]">
-                            <x-brand-mark class="h-6 w-6" />
+                        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-cream-50 ring-1 ring-cream/20 transition duration-200 group-hover:ring-cream/40">
+                            <x-brand-mark class="h-7 w-7" />
                         </span>
                         <span>
-                            <span class="block text-[19px] font-semibold tracking-[-0.045em] text-cream">Aangan</span>
+                            <span class="block text-[19px] font-semibold tracking-[-0.045em] text-cream">Rentra</span>
                             <span class="mt-0.5 block text-[8.5px] uppercase tracking-[0.26em] text-cream/30">Property accounts</span>
                         </span>
                     </a>
@@ -131,10 +137,10 @@
                 <header class="sticky top-0 z-40 border-b border-espresso/[0.07] bg-cream/80 backdrop-blur-2xl lg:hidden">
                     <div class="flex h-[60px] items-center justify-between px-5">
                         <a href="{{ route('dashboard') }}" wire:navigate class="flex items-center gap-2.5">
-                            <span class="grid h-8 w-8 place-items-center rounded-xl bg-espresso text-cream">
-                                <x-brand-mark class="h-5 w-5" />
+                            <span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-cream-50 ring-1 ring-espresso/10">
+                                <x-brand-mark class="h-6 w-6" />
                             </span>
-                            <span class="text-[16px] font-semibold tracking-[-0.04em]">Aangan</span>
+                            <span class="text-[16px] font-semibold tracking-[-0.04em]">Rentra</span>
                         </a>
 
                         <div class="flex items-center gap-2">
@@ -178,7 +184,7 @@
                 </main>
 
                 <footer class="mx-auto hidden w-full max-w-[1440px] items-center justify-between px-10 pb-8 text-[9px] uppercase tracking-[0.2em] text-espresso/25 lg:flex xl:px-14">
-                    <span>Aangan · Property accounts</span>
+                    <span>Rentra · Property accounts</span>
                     <span>Cash · Bank · Monthly close</span>
                 </footer>
             </div>

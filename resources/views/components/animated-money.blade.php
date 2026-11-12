@@ -10,5 +10,7 @@
 <span
     x-data="animatedMoney({{ $value }}, '{{ $symbol }}')"
     x-text="formatted"
+    data-animated-money
+    data-amount="{{ $value }}"
     {{ $attributes->merge(['class' => 'tabular-nums']) }}
 >{{ $symbol }}{{ $formatted }}</span>

@@ -87,18 +87,28 @@
                 <p class="mt-1 text-[10.5px] text-espresso/35">{{ count($expenses) }} entries · {{ $monthLabel }}</p>
             </div>
 
-            <div class="flex flex-wrap items-center gap-2">
-                <button type="button" disabled class="btn btn-secondary px-3.5 py-2 text-[11px]" title="PDF export is not available yet">
+            <div class="flex flex-wrap items-center gap-2 max-sm:w-full">
+                <a
+                    href="{{ route('cashbook.export.pdf', ['month' => $data['month']]) }}"
+                    class="btn btn-secondary px-3.5 py-2 text-[11px] max-sm:flex-1"
+                    title="Download the {{ $monthLabel }} cashbook as a PDF"
+                    download
+                >
                     <x-icon name="file-text" class="h-3.5 w-3.5" />
                     PDF
-                    <span class="stage-tag">Soon</span>
-                </button>
+                    <span class="stage-tag">Download</span>
+                </a>
 
-                <button type="button" disabled class="btn btn-secondary px-3.5 py-2 text-[11px]" title="Excel export is not available yet">
+                <a
+                    href="{{ route('cashbook.export.xlsx', ['month' => $data['month']]) }}"
+                    class="btn btn-secondary px-3.5 py-2 text-[11px] max-sm:flex-1"
+                    title="Download the {{ $monthLabel }} cashbook as an Excel workbook"
+                    download
+                >
                     <x-icon name="file-spreadsheet" class="h-3.5 w-3.5" />
                     Excel
-                    <span class="stage-tag">Soon</span>
-                </button>
+                    <span class="stage-tag">Download</span>
+                </a>
             </div>
         </div>
 

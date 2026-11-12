@@ -25,14 +25,14 @@ class StageTwoPortfolioTest extends TestCase
         Livewire::test(Buildings::class)
             ->call('createBuilding')
             ->assertSet('showBuildingModal', true)
-            ->set('buildingForm.name', 'Aangan Heights')
+            ->set('buildingForm.name', 'Rentra Heights')
             ->set('buildingForm.address', 'House 7, Road 2, Dhaka')
             ->set('buildingForm.units', '1A, 1B, 2A')
             ->call('saveBuilding')
             ->assertHasNoErrors()
             ->assertSet('showBuildingModal', false);
 
-        $building = Building::query()->where('name', 'Aangan Heights')->firstOrFail();
+        $building = Building::query()->where('name', 'Rentra Heights')->firstOrFail();
 
         $this->assertSame(
             ['1A', '1B', '2A'],

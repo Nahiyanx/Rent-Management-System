@@ -18,7 +18,7 @@
         <div class="feature-card reveal p-7 sm:p-9 lg:p-10 xl:col-span-7">
             <div class="pointer-events-none absolute -right-24 -top-28 h-80 w-80 rounded-full border border-cream/[0.08]"></div>
             <div class="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full border border-cream/[0.06]"></div>
-            <x-brand-mark class="pointer-events-none absolute right-8 top-9 hidden h-28 w-28 text-cream/[0.07] sm:block" />
+            <x-brand-mark class="pointer-events-none absolute right-8 top-9 hidden h-28 w-28 opacity-[0.07] brightness-0 invert sm:block" />
 
             <div class="relative flex h-full flex-col">
                 <div class="flex items-start justify-between gap-4">

@@ -169,24 +169,61 @@ const registerAlpineComponents = () => {
         target: Number(target) || 0,
         symbol: symbol || '৳',
         frame: null,
+        observer: null,
 
         init() {
+            this.observer = new MutationObserver(() => {
+                const next = Number(this.$el.dataset.amount);
+
+                if (! Number.isFinite(next) || next === this.target) {
+                    return;
+                }
+
+                this.$el.classList.remove('money-update');
+                void this.$el.offsetWidth;
+                this.$el.classList.add('money-update');
+
+                this.animateTo(next, 650);
+            });
+
+            this.observer.observe(this.$el, {
+                attributes: true,
+                attributeFilter: ['data-amount'],
+            });
+
             if (prefersReducedMotion()) {
                 this.display = this.target;
 
                 return;
             }
 
+            this.animateTo(this.target, 900);
+        },
+
+        animateTo(next, duration) {
+            this.target = Number(next) || 0;
+
+            if (prefersReducedMotion()) {
+                this.display = this.target;
+
+                return;
+            }
+
+            if (this.frame) {
+                cancelAnimationFrame(this.frame);
+            }
+
+            const from = this.display;
             const startedAt = performance.now();
-            const duration = 900;
 
             const tick = (now) => {
                 const progress = Math.min((now - startedAt) / duration, 1);
                 const eased = 1 - Math.pow(1 - progress, 3);
+                const value = from + (this.target - from) * eased;
 
                 this.display = this.hasFraction
-                    ? Math.round(this.target * eased * 100) / 100
-                    : Math.round(this.target * eased);
+                    ? Math.round(value * 100) / 100
+                    : Math.round(value);
 
                 if (progress < 1) {
                     this.frame = requestAnimationFrame(tick);
@@ -200,6 +237,8 @@ const registerAlpineComponents = () => {
             if (this.frame) {
                 cancelAnimationFrame(this.frame);
             }
+
+            this.observer?.disconnect();
         },
 
         get hasFraction() {

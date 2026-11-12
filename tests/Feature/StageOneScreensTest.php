@@ -39,8 +39,22 @@ class StageOneScreensTest extends TestCase
             $this->get(route($route))
                 ->assertOk()
                 ->assertSee($heading)
-                ->assertSee('Aangan');
+                ->assertSee('Rentra');
         }
+    }
+
+    public function test_layout_uses_the_rentra_logo_and_favicons(): void
+    {
+        $response = $this->get(route('dashboard'))->assertOk();
+
+        $response
+            ->assertSeeHtml('href="'.asset('favicon.ico').'"')
+            ->assertSeeHtml('href="'.asset('images/favicon-32x32.png').'"')
+            ->assertSeeHtml('src="'.asset('images/rentra-mark.png').'"');
+
+        $this->assertFileExists(public_path('favicon.ico'));
+        $this->assertFileExists(public_path('images/rentra-mark.png'));
+        $this->assertFileExists(public_path('images/apple-touch-icon.png'));
     }
 
     public function test_primary_navigation_links_to_every_screen(): void
@@ -179,7 +193,7 @@ class StageOneScreensTest extends TestCase
             ->assertSee('Building maintenance')
             ->assertSee('PDF')
             ->assertSee('Excel')
-            ->assertSee('Soon');
+            ->assertSee('Download');
 
         Livewire::test(Cashbook::class)
             ->call('openExpense')
@@ -198,11 +212,11 @@ class StageOneScreensTest extends TestCase
             ->assertSet('showDeleteModal', false);
     }
 
-    public function test_export_controls_remain_disabled_until_they_are_built(): void
+    public function test_export_controls_link_to_the_selected_month(): void
     {
         $this->get(route('cashbook'))
-            ->assertSeeHtml('title="PDF export is not available yet"')
-            ->assertSeeHtml('title="Excel export is not available yet"')
-            ->assertDontSee('Stage 1');
+            ->assertSeeHtml('href="'.route('cashbook.export.pdf', ['month' => '2026-11']).'"')
+            ->assertSeeHtml('href="'.route('cashbook.export.xlsx', ['month' => '2026-11']).'"')
+            ->assertDontSee('Soon');
     }
 }

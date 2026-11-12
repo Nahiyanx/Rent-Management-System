@@ -61,7 +61,7 @@
             </button>
         </header>
 
-        <div class="overflow-y-auto px-6 pb-6 sm:px-7">
+        <div class="overflow-y-auto overscroll-contain px-6 pb-6 sm:px-7">
             {{ $slot }}
         </div>
 

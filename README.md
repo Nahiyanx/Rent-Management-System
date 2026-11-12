@@ -1,12 +1,13 @@
-# Aangan — Property Accounts
+# Rentra — Property Accounts
 
 A calm, warm accounting workspace for a small property portfolio: buildings, tenants,
 monthly rent bills, and a cashbook in one place.
 
-This repository currently contains **Stage 3 — Cashbook, Expenses and Monthly
-Balances**. Buildings, flats, tenants, tenancies, monthly bills, payments, starting
+This repository currently contains **Stage 4 — Cashbook Exports, Mobile Optimization and
+Final Polish**. Buildings, flats, tenants, tenancies, monthly bills, payments, starting
 balances, and expenses are stored in the database. The Dashboard and Cashbook use the
-same live financial calculation, and export controls remain visibly disabled.
+same live financial calculation, and the Cashbook can export the selected month as a
+PDF or Excel workbook.
 
 ---
 
@@ -20,6 +21,8 @@ same live financial calculation, and export controls remain visibly disabled.
 | Tailwind CSS | 4.x |
 | Alpine.js | bundled with Livewire |
 | Vite | 8.x |
+| PDF | dompdf 3.x |
+| Excel | PhpSpreadsheet 5.x |
 | Font | Inter Variable (self-hosted via `@fontsource-variable/inter`) |
 
 All assets are bundled locally — no CDN calls, no external font requests.
@@ -27,6 +30,13 @@ All assets are bundled locally — no CDN calls, no external font requests.
 ---
 
 ## Run locally (Windows)
+
+**Requirements**
+
+- PHP 8.3 with the `gd`, `zip`, `mbstring`, `dom`, `fileinfo`, and `xml` extensions
+  enabled (needed for PDF and Excel generation).
+- Composer 2.
+- Node.js 20 or newer with npm.
 
 ```powershell
 # 1. Install PHP and JS dependencies
@@ -37,7 +47,8 @@ npm install
 Copy-Item .env.example .env
 php artisan key:generate
 
-# 3. Create the SQLite database and load the demonstration portfolio
+# 3. Create the SQLite database file and load the demonstration portfolio
+New-Item -ItemType File -Path database\database.sqlite -Force | Out-Null
 php artisan migrate --seed
 
 # 4. Build the front-end assets
@@ -112,6 +123,38 @@ The Vite config pins the hot file to `http://localhost:5173` (browsers reject
 
 ---
 
+## Database backup and restore
+
+All application data is stored in the SQLite file `database\database.sqlite`. Stop
+writes while copying it so the backup is not taken mid-transaction. Run these commands
+from the project root in PowerShell.
+
+**Back up**
+
+```powershell
+New-Item -ItemType Directory -Force database\backups | Out-Null
+php artisan down
+Copy-Item database\database.sqlite "database\backups\database-$(Get-Date -Format 'yyyyMMdd-HHmmss').sqlite"
+php artisan up
+```
+
+**Restore**
+
+```powershell
+php artisan down
+Copy-Item database\backups\database-20261112-103000.sqlite database\database.sqlite -Force
+php artisan up
+```
+
+Replace the example filename with the backup you want to restore. If the backup was
+made before a later migration, run `php artisan migrate --force` afterwards.
+
+Keep at least one recent copy outside the project folder (for example in OneDrive or
+on a USB drive). The monthly PDF and Excel exports are also useful accounting
+snapshots, but they are not a substitute for the database backup.
+
+---
+
 ## Screens
 
 | Screen | Route | What it shows |
@@ -120,10 +163,31 @@ The Vite config pins the hot file to `http://localhost:5173` (browsers reject
 | Buildings | `/buildings` | Live records: property cards with name, address, total flats, and occupied count. Add/Edit forms with unit registration. |
 | Tenants | `/tenants` | Live records: name, building, flat, monthly house rent, contact number, charge defaults, notes, search, Add/Edit, and End tenancy. |
 | Rent | `/rent` | Live billing: month/year selector, building filter, generated monthly bills, editable charges, status, and a bill drawer for Cash/Bank payments, payment dates, partial payments, and payment history. |
-| Cashbook | `/cashbook` | Live cash, bank, and combined balances; chronological expense table with month filter; Add/Edit/Delete expense paid from Cash or Bank; disabled PDF/Excel export controls. |
+| Cashbook | `/cashbook` | Live cash, bank, and combined balances; chronological expense table with month filter; Add/Edit/Delete expense paid from Cash or Bank; PDF and Excel downloads for the selected month. |
 
 Navigation is limited to these five screens, with a desktop sidebar and a mobile
 bottom navigation bar.
+
+---
+
+## Cashbook exports
+
+The **PDF** and **Excel** buttons on the Cashbook export the month currently shown.
+Change the month with the switcher first, then download; only that period's receipts
+and expenses are included. Both files are named
+`rentra-cashbook-YYYY-MM.pdf` / `.xlsx`.
+
+- **PDF** — A4 portrait report with the month, cash/bank opening balances, rent
+  received by account, expenses by account, cash/bank closing balances, the combined
+  closing balance, and a chronological expense table with Cash and Bank subtotals.
+- **Excel** — a formatted workbook with **Financial Summary**, **Rent Receipts**, and
+  **Expenses** worksheets. Dates use real Excel dates, money uses BDT number formats,
+  headings and totals are styled, columns are sized, and summary/closing cells use
+  formulas (`SUMIFS` and arithmetic) with cached values.
+
+`app/Support/CashbookReport.php` builds both files from one data set.
+`app/Support/Financials.php` remains the single source of every financial figure, so
+the PDF, workbook, Dashboard, and Cashbook always agree.
 
 ---
 
@@ -174,7 +238,7 @@ php artisan test --compact
 - `tests/Feature/StageOneScreensTest.php` covers all five screens, navigation,
   dashboard figures and month switching, the starting-balances modal, seeded
   building and tenant records, rent filtering and the bill drawer, cashbook
-  actions, and the disabled export controls.
+  actions, and export links for the selected month.
 - `tests/Feature/StageTwoPortfolioTest.php` covers building registration and unit
   syncing, tenant registration and charge defaults, duplicate active tenancy
   prevention, ending a tenancy, rent totals, idempotent monthly billing, full and
@@ -184,6 +248,10 @@ php artisan test --compact
   monthly rollover, Cash and Bank rent, Cash and Bank expenses, backdated
   transactions, expense create/edit/delete, historical adjustments, the dashboard
   save/warning flow, chronological month filtering, and the combined closing balance.
+- `tests/Feature/StageFourExportsTest.php` covers export links following the selected
+  month, PDF and Excel downloads, invalid-month rejection, shared report data, PDF
+  figures matching the Dashboard, the three workbook sheets, formulas, BDT/date
+  formats, month filtering, and Cash/Bank subtotals.
 
 Code style:
 
@@ -195,7 +263,7 @@ vendor/bin/pint --format agent
 
 ## Stage status
 
-See [PROGRESS.md](PROGRESS.md) for the stage-by-stage log. Stages 1–3 are complete:
-the visual layer, Buildings/Tenants/Rent Collection, and the live Cashbook,
-expenses, and monthly balances. PDF/Excel export, receipt download, and
-authentication are not implemented.
+See [PROGRESS.md](PROGRESS.md) for the stage-by-stage log. Stages 1–4 are complete:
+the visual layer, Buildings/Tenants/Rent Collection, the live Cashbook, expenses and
+monthly balances, and monthly PDF/Excel exports with mobile and animation polish.
+Receipt download and authentication are not implemented.

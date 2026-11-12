@@ -60,7 +60,7 @@
             </button>
         </header>
 
-        <div class="flex-1 overflow-y-auto px-6 py-6 sm:px-7">
+        <div class="flex-1 overflow-y-auto overscroll-contain px-6 py-6 sm:px-7">
             {{ $slot }}
         </div>
 

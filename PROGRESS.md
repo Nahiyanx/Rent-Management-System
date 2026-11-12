@@ -1,4 +1,4 @@
-# Aangan — Stage Log
+# Rentra — Stage Log
 
 This file tracks progress stage by stage. Update it at the end of every stage.
 
@@ -14,7 +14,7 @@ no payment collection.
 
 **Project setup**
 - Laravel 13.42, Livewire 4.4.8, Tailwind CSS 4, Vite 8, PHP 8.3.
-- App named **Aangan** (`APP_NAME` in `.env` / `.env.example`).
+- App named **Rentra** (`APP_NAME` in `.env` / `.env.example`).
 - Timezone defaults to `Asia/Dhaka` via `APP_TIMEZONE` in `config/app.php`.
 - Inter Variable self-hosted from `@fontsource-variable/inter`; Laravel's external
   font plugin removed from Vite so nothing loads from a CDN.
@@ -315,6 +315,119 @@ The seeded November 2026 figures remain:
 
 - PDF/Excel export and receipt download are not implemented; their controls stay
   disabled.
+- Bills remain full-month amounts; mid-month move-ins and move-outs are not prorated.
+- A recorded rent payment cannot be edited or reversed from the UI.
+- No authentication or per-user data separation.
+- `resources/views/welcome.blade.php` remains unused (Laravel default, harmless).
+
+---
+
+## Stage 4 — Cashbook Exports, Mobile Optimization & Final Polish ✅ Complete
+
+**Goal:** Export the selected month's Cashbook as a professional PDF and a formatted
+Excel workbook from one shared reporting service, finish the mobile experience, refine
+the animation layer, and verify all five modules end to end.
+
+### Dependencies
+
+- `dompdf/dompdf` 3.1.6 for PDF rendering.
+- `phpoffice/phpspreadsheet` 5.11.0 for `.xlsx` generation.
+- No design-reference PDF or workbook was present in the repository, so both exports
+  were designed from Rentra's approved cream, burgundy, wine, and espresso identity.
+
+### Shared reporting service
+
+`app/Support/CashbookReport.php` is the only reporting implementation:
+
+- `data()` loads the selected month's receipts, expenses, and
+  `Financials::summary()` figures.
+- `html()` renders the PDF Blade view.
+- `pdf()` renders A4 portrait with page numbers.
+- `xlsxPath()` builds the workbook and pre-calculates formulas.
+- Both exports therefore use identical values, and both match the Dashboard and
+  Cashbook because `Financials` remains the single source of truth.
+
+### PDF export
+
+`resources/views/reports/cashbook-pdf.blade.php` provides:
+
+- Monthly Cashbook title, selected month/year, and generation timestamp.
+- Cash and Bank opening balances.
+- Rent received in Cash and in Bank.
+- Cash and Bank expense totals.
+- Cash and Bank closing balances.
+- Highlighted combined closing balance.
+- Chronological expense table: date, description, paid from, amount.
+- Cash subtotal, Bank subtotal, and total expenses.
+- A4 printable styling, BDT amounts, and page-number footer.
+
+### Excel export
+
+The workbook contains:
+
+- **Financial Summary** — styled header, opening balances, rent by account, expenses
+  by account, closing balances, and combined closing. `SUMIFS` formulas pull from the
+  receipt and expense sheets; closing cells use arithmetic formulas.
+- **Rent Receipts** — date, tenant, building, flat, billed month, method, Cash, Bank,
+  and a total row. Real dates and BDT number formats.
+- **Expenses** — date, description, paid from, Cash, Bank, amount, account subtotals,
+  and total. Real dates and BDT number formats.
+- Bold headings, burgundy header fills, frozen header rows, auto-filters, sized
+  columns, and A4 print setup.
+
+### Month selection and routes
+
+- The existing month switcher now includes a native month input popover while keeping
+  previous/next arrows.
+- `cashbook.export.pdf` and `cashbook.export.xlsx` accept a validated `month=YYYY-MM`
+  query parameter and stream only that period's records.
+- Invalid month formats return 404.
+- Cashbook export buttons are real download links carrying the selected month.
+
+### Mobile and interaction polish
+
+- 48 px minimum inputs/selects, 16 px mobile input text (prevents browser zoom), 44 px
+  buttons and icon buttons, and 52 px mobile navigation targets.
+- Safe-area-aware bottom navigation with press feedback.
+- Expense modal and rent drawer use contained overscroll and fit the phone viewport.
+- Export controls share the row on small screens and remain 44 px tall.
+- Animated balances re-run when Livewire updates `data-amount`.
+- Save confirmations include a lightweight progress bar.
+- Modal entrance/exit, table reveals, and month changes keep short,
+  reduced-motion-aware transitions.
+
+### Verification performed
+
+- Test suite: **48 tests, 345 assertions, all passing**
+  (`php artisan test --compact`).
+- New `tests/Feature/StageFourExportsTest.php` — 8 tests covering export links following
+  the month, PDF/XLSX downloads, invalid months, shared data, PDF figures matching the
+  Dashboard, all three worksheets, formulas, currency/date formats, month filtering,
+  Cash/Bank subtotals, and empty-month zero totals.
+- `tests/Feature/StageOneScreensTest.php` updated to assert real export links instead of
+  disabled “Soon” controls.
+- Generated and inspected a November 2026 PDF (1 A4 page, 26 KB) and workbook (3 sheets,
+  formulas and cached values matching `Financials::summary()`).
+- HTTP checks: all five routes return 200; PDF and XLSX responses return the correct
+  content types, filenames, and non-empty bodies.
+- Headless Edge checks at 390 × 844 and 1440 × 900:
+  - no horizontal overflow on any screen;
+  - sidebar hidden on mobile, bottom navigation hidden on desktop;
+  - mobile navigation targets 62 px tall;
+  - expense modal opens/closes via Escape, fits the viewport, inputs 50 px / 16 px;
+  - rent drawer fits the viewport with 50 px / 16 px inputs;
+  - export controls 44 px tall;
+  - month switcher moves November → December and export links follow;
+  - month picker popover fits 320 px and 390 px screens and updates the exports;
+  - no console or page errors;
+  - no “Soon” or disabled placeholder buttons remain.
+- `npm run build` succeeds; `vendor/bin/pint app tests database --format agent` passes.
+- README now documents Windows setup, LAN/phone access, exports, and SQLite
+  backup/restore.
+
+### Known Stage 4 limitations
+
+- Receipt download from a rent bill is not implemented.
 - Bills remain full-month amounts; mid-month move-ins and move-outs are not prorated.
 - A recorded rent payment cannot be edited or reversed from the UI.
 - No authentication or per-user data separation.
