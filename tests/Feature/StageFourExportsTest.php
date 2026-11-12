@@ -82,13 +82,12 @@ class StageFourExportsTest extends TestCase
         foreach ([
             'starting_cash',
             'starting_bank',
-            'cash_rent',
-            'bank_rent',
             'cash_expenses',
             'bank_expenses',
             'closing_cash',
             'closing_bank',
             'closing_total',
+            'expenses',
         ] as $key) {
             $this->assertStringContainsString(
                 'BDT '.number_format($summary[$key], 2),
@@ -101,7 +100,8 @@ class StageFourExportsTest extends TestCase
         $this->assertStringContainsString('November 2026', $html);
         $this->assertStringContainsString('Cash expenses subtotal', $html);
         $this->assertStringContainsString('Bank expenses subtotal', $html);
-        $this->assertStringContainsString('Combined closing balance', $html);
+        $this->assertStringContainsString('Combined current balance', $html);
+        $this->assertStringNotContainsString('Opening balances are not rental income', $html);
     }
 
     public function test_workbook_has_the_three_required_sheets_with_matching_figures(): void

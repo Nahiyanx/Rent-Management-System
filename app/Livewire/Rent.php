@@ -21,6 +21,8 @@ class Rent extends Component
 
     public string $buildingFilter = 'all';
 
+    public string $statusFilter = 'all';
+
     public bool $showBillDrawer = false;
 
     public ?int $selectedTenancyId = null;
@@ -110,6 +112,11 @@ class Rent extends Component
     }
 
     public function updatedBuildingFilter(): void
+    {
+        $this->closeBill();
+    }
+
+    public function updatedStatusFilter(): void
     {
         $this->closeBill();
     }
@@ -260,6 +267,23 @@ class Rent extends Component
             ->filter()
             ->values();
 
+        $statusOf = fn (Tenancy $tenancy): string => $tenancy->rentBills->first()?->status() ?? 'Not billed';
+
+        $statusCounts = ['all' => $tenancies->count()];
+
+        foreach ($tenancies as $tenancy) {
+            $status = $statusOf($tenancy);
+            $statusCounts[$status] = ($statusCounts[$status] ?? 0) + 1;
+        }
+
+        foreach (['Paid', 'Unpaid', 'Partially Paid', 'Not billed'] as $status) {
+            $statusCounts[$status] ??= 0;
+        }
+
+        $visibleTenancies = $this->statusFilter === 'all'
+            ? $tenancies
+            : $tenancies->filter(fn (Tenancy $tenancy): bool => $statusOf($tenancy) === $this->statusFilter)->values();
+
         $billed = round((float) $bills->sum(fn (RentBill $bill): float => (float) $bill->total_due), 2);
         $collected = round((float) $bills->sum(fn (RentBill $bill): float => $bill->paidAmount()), 2);
         $outstanding = max(round($billed - $collected, 2), 0);
@@ -268,8 +292,9 @@ class Rent extends Component
         $selectedBill = $selectedTenancy?->rentBills->first();
 
         return view('livewire.rent', [
-            'tenancies' => $tenancies,
+            'tenancies' => $visibleTenancies,
             'buildings' => Building::query()->orderBy('name')->get(),
+            'statusCounts' => $statusCounts,
             'summary' => [
                 'billed' => $billed,
                 'collected' => $collected,

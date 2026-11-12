@@ -6,7 +6,7 @@
 
     <style>
         @page {
-            margin: 30px 34px 44px;
+            margin: 32px 36px 42px;
         }
 
         * {
@@ -18,13 +18,13 @@
             color: #200e01;
             font-family: 'DejaVu Sans', sans-serif;
             font-size: 9.5px;
-            line-height: 1.45;
+            line-height: 1.5;
         }
 
         .masthead {
             width: 100%;
+            padding-bottom: 10px;
             border-bottom: 2px solid #5b0202;
-            padding-bottom: 12px;
         }
 
         .masthead table {
@@ -36,166 +36,203 @@
             vertical-align: bottom;
         }
 
-        .brand-sub {
+        .masthead-rule {
             margin-top: 3px;
-            font-size: 7.5px;
-            letter-spacing: 1.8px;
+            border-top: 1px solid #d8cba0;
+        }
+
+        .brand-sub {
+            margin-top: 5px;
+            font-size: 7px;
+            font-weight: bold;
+            letter-spacing: 2.2px;
             text-transform: uppercase;
             color: #8a7a68;
-        }
-
-        .report-title {
-            margin: 22px 0 0;
-            font-size: 25px;
-            font-weight: bold;
-            letter-spacing: -0.5px;
-            color: #5b0202;
-        }
-
-        .report-month {
-            margin-top: 5px;
-            font-size: 11px;
-            color: #6b5b4a;
         }
 
         .meta {
-            margin-top: 4px;
-            font-size: 8px;
             text-align: right;
+            line-height: 1.7;
+        }
+
+        .meta-label {
+            font-size: 7px;
+            font-weight: bold;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            color: #5b0202;
+        }
+
+        .meta-generated {
+            font-size: 7.5px;
             color: #8a7a68;
         }
 
-        .section-label {
-            margin: 22px 0 8px;
+        .report-kicker {
+            width: 34px;
+            height: 3px;
+            margin-top: 26px;
+            background: #8b0000;
+        }
+
+        .report-title {
+            margin: 12px 0 0;
+            font-family: 'DejaVu Serif', serif;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: -0.6px;
+            line-height: 1.05;
+            color: #200e01;
+        }
+
+        .report-month {
+            margin-top: 8px;
             font-size: 7.5px;
             font-weight: bold;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #8b0000;
+        }
+
+        .balances {
+            width: 100%;
+            margin-top: 22px;
+            border-collapse: collapse;
+            page-break-inside: avoid;
+        }
+
+        .balance-cell {
+            padding: 12px 14px;
+            vertical-align: top;
+            background: #faf6e6;
+            border: 1px solid #e6dcb8;
+        }
+
+        .balance-cash-bank {
+            width: 28%;
+        }
+
+        .balance-combined {
+            width: 34%;
+            background: #5b0202;
+            border-color: #5b0202;
+        }
+
+        .balance-gap {
+            width: 8px;
+        }
+
+        .balance-label {
+            font-size: 7px;
+            font-weight: bold;
+            letter-spacing: 1.6px;
             text-transform: uppercase;
             color: #8a7a68;
         }
 
-        .summary {
+        .balance-inner {
             width: 100%;
+            margin-top: 8px;
             border-collapse: collapse;
         }
 
-        .summary td {
-            width: 50%;
-            padding: 0;
-            vertical-align: top;
+        .balance-inner td {
+            padding: 3px 0;
+            font-size: 9px;
+            border-bottom: 1px solid #ece3c2;
         }
 
-        .summary-inner {
-            width: 100%;
-            border-collapse: collapse;
-            border: 1px solid #e1d8ae;
-        }
-
-        .summary-inner td {
-            padding: 7px 10px;
-            border-bottom: 1px solid #ede7c7;
-        }
-
-        .summary-inner tr:last-child td {
+        .balance-inner tr:last-child td {
+            padding-bottom: 0;
             border-bottom: 0;
         }
 
-        .summary-label {
-            color: #6b5b4a;
+        .balance-inner .row-label {
+            color: #8a7a68;
         }
 
-        .summary-value {
+        .balance-inner .row-value {
             text-align: right;
             font-weight: bold;
             white-space: nowrap;
             color: #200e01;
         }
 
-        .summary-left {
-            padding-right: 6px !important;
-        }
-
-        .summary-right {
-            padding-left: 6px !important;
-        }
-
-        .combined {
-            width: 100%;
-            margin-top: 8px;
-            border: 1px solid #5b0202;
-            background: #5b0202;
-            color: #ede7c7;
-            padding: 11px 13px;
-        }
-
-        .combined table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .combined td {
-            vertical-align: middle;
-        }
-
-        .combined-label {
-            font-size: 8px;
+        .balance-inner .closing-label {
             font-weight: bold;
-            letter-spacing: 1.4px;
-            text-transform: uppercase;
+            color: #6b5b4a;
+        }
+
+        .balance-inner .closing-value {
+            font-size: 11px;
+        }
+
+        .balance-combined .balance-label {
             color: #d9cfa9;
         }
 
-        .combined-note {
-            margin-top: 3px;
-            font-size: 7.5px;
-            color: #c6b98f;
+        .balance-total {
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: -0.2px;
+            color: #f6f0d8;
         }
 
-        .combined-value {
-            text-align: right;
-            font-size: 19px;
-            font-weight: bold;
-            white-space: nowrap;
+        .balance-foot {
+            margin-top: 5px;
+            font-size: 7px;
+            letter-spacing: 0.5px;
+            color: #c6b98f;
         }
 
         .expenses {
             width: 100%;
+            margin-top: 22px;
+            border: 1px solid #e6dcb8;
             border-collapse: collapse;
-            margin-top: 4px;
+        }
+
+        .expenses thead {
+            display: table-header-group;
         }
 
         .expenses thead th {
             background: #5b0202;
-            color: #ede7c7;
-            font-size: 7.5px;
-            letter-spacing: 1px;
+            color: #f6f0d8;
+            font-size: 7px;
+            font-weight: bold;
+            letter-spacing: 1.3px;
             text-transform: uppercase;
             text-align: left;
-            padding: 8px 9px;
+            padding: 9px 10px;
         }
 
         .expenses tbody td {
-            padding: 7px 9px;
-            border-bottom: 1px solid #e1d8ae;
+            padding: 8px 10px;
+            font-size: 9px;
+            border-bottom: 1px solid #ece3c2;
             vertical-align: top;
         }
 
         .expenses tbody tr:nth-child(even) td {
-            background: #faf7ea;
+            background: #fcf9ee;
         }
 
         .expenses .date {
             width: 17%;
             white-space: nowrap;
-            color: #6b5b4a;
+            color: #8a7a68;
         }
 
         .expenses .description {
             width: 48%;
+            color: #200e01;
         }
 
         .expenses .paid-from {
             width: 15%;
+            color: #6b5b4a;
         }
 
         .expenses .amount {
@@ -206,60 +243,38 @@
         }
 
         .expenses tfoot td {
-            padding: 7px 9px;
-            border-top: 1px solid #e1d8ae;
-            color: #6b5b4a;
-        }
-
-        .expenses tfoot tr:first-child td {
-            border-top: 1.5px solid #8b0000;
+            padding: 8px 10px;
+            background: #faf6e6;
+            border-top: 1px solid #e6dcb8;
+            color: #8a7a68;
         }
 
         .expenses tfoot .amount {
-            color: #200e01;
+            text-align: right;
+            white-space: nowrap;
             font-weight: bold;
+            color: #200e01;
         }
 
         .expenses tfoot .grand-total td {
-            background: #f8f4e3;
-            border-top: 1.5px solid #5b0202;
+            background: #f3ecd2;
+            border-top: 2px solid #5b0202;
             color: #200e01;
             font-size: 10px;
+            font-weight: bold;
+        }
+
+        .expenses tfoot .grand-total .amount {
+            color: #8b0000;
         }
 
         .empty {
-            padding: 18px 10px;
+            padding: 22px 10px;
             text-align: center;
             color: #8a7a68;
             font-style: italic;
-            border-bottom: 1px solid #e1d8ae;
-        }
-
-        .note {
-            margin-top: 16px;
-            padding: 9px 11px;
-            border-left: 3px solid #8b0000;
-            background: #f8f4e3;
-            color: #6b5b4a;
-            font-size: 8px;
-            line-height: 1.5;
-        }
-
-        .sign-off {
-            margin-top: 24px;
-            padding-top: 8px;
-            border-top: 1px solid #e1d8ae;
-            font-size: 7.5px;
-            color: #8a7a68;
-        }
-
-        .sign-off table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .sign-off td:last-child {
-            text-align: right;
+            background: #fcf9ee;
+            border-bottom: 1px solid #e6dcb8;
         }
     </style>
 </head>
@@ -274,80 +289,59 @@
         <table>
             <tr>
                 <td>
-                    <img src="{{ $brandLogo }}" alt="Rentra" style="width: 80px; height: auto;">
+                    <img src="{{ $brandLogo }}" alt="Rentra" style="width: 78px; height: auto;">
                     <div class="brand-sub">Property accounts</div>
                 </td>
                 <td class="meta">
-                    Generated {{ now()->format('d M Y, H:i') }}<br>
-                    {{ $report['month_label'] }} · Cashbook
+                    <div class="meta-label">Cash &amp; bank statement</div>
+                    <div class="meta-generated">Generated {{ now()->format('d M Y, H:i') }}</div>
                 </td>
             </tr>
         </table>
     </div>
+    <div class="masthead-rule"></div>
 
+    <div class="report-kicker"></div>
     <h1 class="report-title">Monthly Cashbook</h1>
-    <div class="report-month">{{ $report['month_label'] }} · Cash and bank summary</div>
+    <div class="report-month">{{ $report['month_label'] }} · Cash and bank</div>
 
-    <div class="section-label">Financial summary</div>
-
-    <table class="summary">
+    <table class="balances">
         <tr>
-            <td class="summary-left">
-                <table class="summary-inner">
+            <td class="balance-cell balance-cash-bank">
+                <div class="balance-label">Cash</div>
+                <table class="balance-inner">
                     <tr>
-                        <td class="summary-label">Cash opening balance</td>
-                        <td class="summary-value">{{ $money($summary['starting_cash']) }}</td>
+                        <td class="row-label">Opening</td>
+                        <td class="row-value">{{ $money($summary['starting_cash']) }}</td>
                     </tr>
                     <tr>
-                        <td class="summary-label">Bank opening balance</td>
-                        <td class="summary-value">{{ $money($summary['starting_bank']) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="summary-label">Rent received in Cash</td>
-                        <td class="summary-value">{{ $money($summary['cash_rent']) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="summary-label">Rent received in Bank</td>
-                        <td class="summary-value">{{ $money($summary['bank_rent']) }}</td>
+                        <td class="row-label closing-label">Closing</td>
+                        <td class="row-value closing-value">{{ $money($summary['closing_cash']) }}</td>
                     </tr>
                 </table>
             </td>
-            <td class="summary-right">
-                <table class="summary-inner">
+            <td class="balance-gap"></td>
+            <td class="balance-cell balance-cash-bank">
+                <div class="balance-label">Bank</div>
+                <table class="balance-inner">
                     <tr>
-                        <td class="summary-label">Cash expenses total</td>
-                        <td class="summary-value">{{ $money($summary['cash_expenses']) }}</td>
+                        <td class="row-label">Opening</td>
+                        <td class="row-value">{{ $money($summary['starting_bank']) }}</td>
                     </tr>
                     <tr>
-                        <td class="summary-label">Bank expenses total</td>
-                        <td class="summary-value">{{ $money($summary['bank_expenses']) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="summary-label">Cash closing balance</td>
-                        <td class="summary-value">{{ $money($summary['closing_cash']) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="summary-label">Bank closing balance</td>
-                        <td class="summary-value">{{ $money($summary['closing_bank']) }}</td>
+                        <td class="row-label closing-label">Closing</td>
+                        <td class="row-value closing-value">{{ $money($summary['closing_bank']) }}</td>
                     </tr>
                 </table>
+            </td>
+            <td class="balance-gap"></td>
+            <td class="balance-cell balance-combined">
+                <div class="balance-label">Combined current balance</div>
+                <div class="balance-total">{{ $money($summary['closing_total']) }}</div>
+                <div class="balance-foot">Cash and bank together</div>
             </td>
         </tr>
     </table>
-
-    <div class="combined">
-        <table>
-            <tr>
-                <td>
-                    <div class="combined-label">Combined closing balance</div>
-                    <div class="combined-note">Cash and bank together, after this month's movement.</div>
-                </td>
-                <td class="combined-value">{{ $money($summary['closing_total']) }}</td>
-            </tr>
-        </table>
-    </div>
-
-    <div class="section-label">Expense detail</div>
 
     <table class="expenses">
         <thead>
@@ -387,20 +381,5 @@
             </tr>
         </tfoot>
     </table>
-
-    <div class="note">
-        Opening balances are not rental income. Rent is recognised on its actual payment date;
-        expenses are recognised on their expense date. Figures in this report match the Dashboard
-        and Cashbook for {{ $report['month_label'] }}.
-    </div>
-
-    <div class="sign-off">
-        <table>
-            <tr>
-                <td>Rentra · Monthly Cashbook · {{ $report['month_label'] }}</td>
-                <td>Amounts in Bangladeshi Taka (BDT)</td>
-            </tr>
-        </table>
-    </div>
 </body>
 </html>

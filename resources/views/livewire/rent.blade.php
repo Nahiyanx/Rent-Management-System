@@ -54,6 +54,35 @@
         </div>
     </section>
 
+    <div class="flex flex-wrap items-center gap-2">
+        <span class="mr-1 text-[9px] font-medium uppercase tracking-[0.17em] text-espresso/30">Status</span>
+
+        @foreach ([
+            'all' => 'All',
+            'Paid' => 'Paid',
+            'Unpaid' => 'Unpaid',
+            'Partially Paid' => 'Partially paid',
+            'Not billed' => 'Not billed',
+        ] as $value => $label)
+            <button
+                type="button"
+                wire:click="$set('statusFilter', '{{ $value }}')"
+                @class([
+                    'inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[11px] font-medium transition-all duration-200',
+                    'border-wine bg-wine text-cream shadow-[0_10px_22px_-16px_rgba(139,0,0,0.9)]' => $statusFilter === $value,
+                    'border-espresso/[0.09] bg-[#fbf7e7]/55 text-espresso/50 hover:border-espresso/[0.16] hover:text-espresso/70' => $statusFilter !== $value,
+                ])
+            >
+                {{ $label }}
+                <span @class([
+                    'rounded-full px-1.5 py-0.5 text-[9px] tabular-nums',
+                    'bg-cream/20 text-cream/80' => $statusFilter === $value,
+                    'bg-espresso/[0.06] text-espresso/35' => $statusFilter !== $value,
+                ])>{{ $statusCounts[$value] ?? 0 }}</span>
+            </button>
+        @endforeach
+    </div>
+
     <section class="card overflow-hidden">
         <div class="hidden grid-cols-[0.55fr_1.4fr_0.8fr_0.65fr_120px] gap-4 border-b border-espresso/[0.07] px-6 py-3.5 text-[9px] font-medium uppercase tracking-[0.18em] text-espresso/30 lg:grid">
             <span>Flat</span>
@@ -119,12 +148,24 @@
                 </div>
             </div>
         @empty
+            @php
+                $emptyTitle = match ($statusFilter) {
+                    'Paid' => 'No paid bills this month',
+                    'Unpaid' => 'No unpaid bills this month',
+                    'Partially Paid' => 'No partially paid bills this month',
+                    'Not billed' => 'No unbilled tenancies this month',
+                    default => 'No tenancies for this building',
+                };
+            @endphp
+
             <div class="px-6 py-16 text-center">
                 <div class="mx-auto grid h-11 w-11 place-items-center rounded-2xl bg-espresso/[0.05] text-espresso/35">
                     <x-icon name="receipt-text" class="h-5 w-5" />
                 </div>
-                <p class="mt-4 text-[14px] font-medium text-espresso/70">No tenancies for this building</p>
-                <p class="mt-1 text-[12px] text-espresso/40">Choose another building or move to a different month.</p>
+                <p class="mt-4 text-[14px] font-medium text-espresso/70">{{ $emptyTitle }}</p>
+                <p class="mt-1 text-[12px] text-espresso/40">
+                    {{ $statusFilter === 'all' ? 'Choose another building or move to a different month.' : 'Try another status or building, or move to a different month.' }}
+                </p>
             </div>
         @endforelse
     </section>

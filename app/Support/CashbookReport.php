@@ -94,16 +94,6 @@ final class CashbookReport
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 
-        $canvas = $dompdf->getCanvas();
-        $canvas->page_text(
-            34,
-            $canvas->get_height() - 24,
-            'Rentra · Monthly Cashbook · Page {PAGE_NUM} of {PAGE_COUNT}',
-            'Helvetica',
-            8,
-            [0.42, 0.36, 0.27],
-        );
-
         return $dompdf->output();
     }
 

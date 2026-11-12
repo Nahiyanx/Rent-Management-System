@@ -241,6 +241,39 @@ class StageTwoPortfolioTest extends TestCase
         ]);
     }
 
+    public function test_rent_screen_filters_tenancies_by_bill_status(): void
+    {
+        $paidTenancy = Tenancy::factory()->create();
+        $paidBill = RentBill::factory()->create(['tenancy_id' => $paidTenancy->id]);
+        RentPayment::factory()->create([
+            'rent_bill_id' => $paidBill->id,
+            'amount' => 35530,
+            'method' => 'Cash',
+            'paid_on' => '2026-11-10',
+        ]);
+
+        $unpaidTenancy = Tenancy::factory()->create();
+
+        Livewire::test(Rent::class)
+            ->assertSet('statusFilter', 'all')
+            ->assertViewHas('tenancies', fn ($tenancies): bool => $tenancies->count() === 2)
+            ->assertViewHas('statusCounts', fn (array $counts): bool => $counts['all'] === 2
+                && $counts['Paid'] === 1
+                && $counts['Unpaid'] === 1
+                && $counts['Partially Paid'] === 0
+                && $counts['Not billed'] === 0)
+            ->set('statusFilter', 'Paid')
+            ->assertViewHas('tenancies', fn ($tenancies): bool => $tenancies->count() === 1
+                && $tenancies->first()->id === $paidTenancy->id)
+            ->assertSee($paidTenancy->tenant->name)
+            ->assertDontSee($unpaidTenancy->tenant->name)
+            ->call('openBill', $paidTenancy->id)
+            ->assertSet('showBillDrawer', true)
+            ->set('statusFilter', 'Not billed')
+            ->assertSet('showBillDrawer', false)
+            ->assertViewHas('tenancies', fn ($tenancies): bool => $tenancies->isEmpty());
+    }
+
     public function test_monthly_bill_amounts_can_be_adjusted_before_payment(): void
     {
         $bill = RentBill::factory()->create();
