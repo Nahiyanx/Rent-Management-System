@@ -1,0 +1,302 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter/wght.css';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
+@source '../../app/Livewire/**/*.php';
+
+@theme {
+    --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-cream: #ede7c7;
+    --color-cream-50: #f8f4e3;
+    --color-cream-100: #ede7c7;
+    --color-cream-200: #e1d8ae;
+    --color-cream-300: #d2c592;
+    --color-parchment: #f6f0d8;
+    --color-sand: #cbbd8f;
+    --color-wine: #8b0000;
+    --color-wine-700: #7a0000;
+    --color-burgundy: #5b0202;
+    --color-burgundy-800: #440101;
+    --color-espresso: #200e01;
+    --color-espresso-800: #2b1707;
+
+    --shadow-soft: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 24px 50px -34px rgba(32, 14, 1, 0.38);
+    --shadow-lift: 0 1px 0 rgba(255, 255, 255, 0.65) inset, 0 30px 60px -30px rgba(32, 14, 1, 0.42);
+}
+
+@layer base {
+    html {
+        -webkit-tap-highlight-color: transparent;
+        scroll-behavior: smooth;
+        scrollbar-gutter: stable;
+        text-rendering: optimizeLegibility;
+    }
+
+    html.dialog-open,
+    html.dialog-open body {
+        overflow: hidden;
+    }
+
+    body {
+        @apply bg-cream font-sans text-espresso antialiased;
+        background-image:
+            radial-gradient(1100px 620px at 88% -12%, rgba(255, 252, 236, 0.82), transparent 62%),
+            radial-gradient(900px 560px at -8% 104%, rgba(91, 2, 2, 0.05), transparent 62%);
+        background-attachment: fixed;
+        font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    }
+
+    ::selection {
+        background: rgba(139, 0, 0, 0.16);
+        color: #200e01;
+    }
+
+    :focus-visible {
+        outline: 2px solid rgba(139, 0, 0, 0.55);
+        outline-offset: 2px;
+    }
+
+    .sidebar-surface :focus-visible {
+        outline-color: rgba(237, 231, 199, 0.55);
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgba(32, 14, 1, 0.16);
+        border: 3px solid transparent;
+        background-clip: padding-box;
+        border-radius: 999px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(32, 14, 1, 0.26);
+        border: 3px solid transparent;
+        background-clip: padding-box;
+    }
+
+    input[type='date']::-webkit-calendar-picker-indicator {
+        opacity: 0.4;
+        cursor: pointer;
+    }
+}
+
+@layer components {
+    .card {
+        @apply rounded-[26px] border border-espresso/[0.08] bg-[#fbf6e3]/60 shadow-soft backdrop-blur-xl;
+    }
+
+    .card-solid {
+        @apply rounded-[26px] border border-espresso/[0.08] bg-parchment shadow-soft;
+    }
+
+    .feature-card {
+        @apply relative overflow-hidden rounded-[26px] border border-white/[0.06] text-cream shadow-[0_30px_70px_-36px_rgba(32,14,1,0.75)];
+        background-color: #5b0202;
+        background-image:
+            radial-gradient(560px 320px at 88% 4%, rgba(237, 231, 199, 0.13), transparent 60%),
+            radial-gradient(480px 420px at 6% 100%, rgba(139, 0, 0, 0.48), transparent 68%),
+            linear-gradient(145deg, #5b0202 0%, #4a0101 58%, #3e0101 100%);
+    }
+
+    .eyebrow {
+        @apply text-[10px] font-medium uppercase tracking-[0.22em] text-espresso/40;
+    }
+
+    .label {
+        @apply mb-2 block text-[10px] font-medium uppercase tracking-[0.17em] text-espresso/45;
+    }
+
+    .input {
+        @apply w-full rounded-2xl border border-espresso/[0.11] bg-[#fbf7e7]/80 px-4 py-3 text-[13.5px] text-espresso shadow-[0_1px_0_rgba(255,255,255,0.55)_inset] outline-none transition duration-200 placeholder:text-espresso/25 focus:border-wine/35 focus:bg-[#fffdf3] focus:ring-4 focus:ring-wine/[0.07];
+    }
+
+    .select {
+        @apply w-full appearance-none rounded-2xl border border-espresso/[0.11] bg-[#fbf7e7]/80 px-4 py-3 pr-10 text-[13.5px] text-espresso shadow-[0_1px_0_rgba(255,255,255,0.55)_inset] outline-none transition duration-200 focus:border-wine/35 focus:bg-[#fffdf3] focus:ring-4 focus:ring-wine/[0.07];
+    }
+
+    .btn {
+        @apply relative inline-flex select-none items-center justify-center gap-2 whitespace-nowrap rounded-full text-[12.5px] font-medium tracking-[-0.005em] transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-55 disabled:shadow-none;
+    }
+
+    .btn:enabled:active {
+        transform: scale(0.985);
+    }
+
+    .btn-primary {
+        @apply bg-wine px-5 py-2.5 text-cream shadow-[0_12px_26px_-14px_rgba(139,0,0,0.8)] hover:bg-wine-700 hover:shadow-[0_16px_30px_-14px_rgba(139,0,0,0.7)] enabled:hover:-translate-y-px;
+    }
+
+    .btn-secondary {
+        @apply border border-espresso/[0.11] bg-[#fbf7e7]/65 px-5 py-2.5 text-espresso/75 shadow-[0_1px_0_rgba(255,255,255,0.55)_inset] hover:border-espresso/[0.18] hover:bg-[#fbf7e7] hover:text-espresso enabled:hover:-translate-y-px;
+    }
+
+    .btn-quiet {
+        @apply px-3 py-2 text-espresso/55 hover:bg-espresso/[0.055] hover:text-espresso;
+    }
+
+    .icon-btn {
+        @apply grid h-9 w-9 place-items-center rounded-full text-espresso/45 transition-all duration-200 hover:bg-espresso/[0.06] hover:text-espresso;
+    }
+
+    .nav-progress {
+        @apply pointer-events-none fixed inset-x-0 top-0 z-[100] h-[2px] origin-left opacity-0;
+        background: linear-gradient(90deg, rgba(139, 0, 0, 0), #8b0000 28%, #5b0202 72%, rgba(91, 2, 2, 0));
+    }
+
+    .sidebar-surface {
+        background-color: #200e01;
+        background-image:
+            radial-gradient(520px 340px at 0% -4%, rgba(139, 0, 0, 0.2), transparent 64%),
+            radial-gradient(420px 420px at 108% 104%, rgba(237, 231, 199, 0.055), transparent 62%);
+    }
+
+    .stage-tag {
+        @apply inline-flex items-center gap-1 rounded-full border border-espresso/10 bg-espresso/[0.045] px-2 py-0.5 text-[8.5px] font-medium uppercase tracking-[0.14em] text-espresso/40;
+    }
+
+    .mobile-nav-surface {
+        background: rgba(246, 240, 216, 0.88);
+        backdrop-filter: blur(22px) saturate(1.1);
+        -webkit-backdrop-filter: blur(22px) saturate(1.1);
+    }
+
+    .hairline {
+        @apply border-espresso/[0.075];
+    }
+}
+
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+
+    .text-pretty {
+        text-wrap: pretty;
+    }
+
+    .reveal {
+        animation: rise-in 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .reveal-1 {
+        animation-delay: 50ms;
+    }
+
+    .reveal-2 {
+        animation-delay: 100ms;
+    }
+
+    .reveal-3 {
+        animation-delay: 150ms;
+    }
+
+    .reveal-4 {
+        animation-delay: 200ms;
+    }
+
+    .reveal-5 {
+        animation-delay: 250ms;
+    }
+}
+
+@keyframes rise-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes nav-progress {
+    0% {
+        opacity: 1;
+        transform: scaleX(0);
+    }
+    55% {
+        opacity: 1;
+        transform: scaleX(0.72);
+    }
+    100% {
+        opacity: 0.95;
+        transform: scaleX(0.92);
+    }
+}
+
+html.is-navigating .nav-progress {
+    opacity: 1;
+    animation: nav-progress 1.15s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes page-out {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-6px) scale(0.996);
+    }
+}
+
+@keyframes page-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.996);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+::view-transition-old(livewire-navigate) {
+    animation: page-out 180ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+::view-transition-new(livewire-navigate) {
+    animation: page-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+html:active-view-transition-type(navigate)::view-transition-old(livewire-navigate) {
+    animation: page-out 180ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+html:active-view-transition-type(navigate)::view-transition-new(livewire-navigate) {
+    animation: page-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
+}
