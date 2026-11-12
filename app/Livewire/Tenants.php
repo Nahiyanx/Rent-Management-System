@@ -35,13 +35,15 @@ class Tenants extends Component
     public ?string $statusMessage = null;
 
     /**
-     * @var array{name: string, contact_number: string, building_id: string, flat_id: string, house_rent: int|float|string, gas_charge: int|float|string, parking_charge: int|float|string, service_charge: int|float|string, notes: string}
+     * @var array{name: string, contact_number: string, building_id: string, flat_id: string, rent_start: string, advance_amount: int|float|string, house_rent: int|float|string, gas_charge: int|float|string, parking_charge: int|float|string, service_charge: int|float|string, notes: string}
      */
     public array $tenantForm = [
         'name' => '',
         'contact_number' => '',
         'building_id' => '',
         'flat_id' => '',
+        'rent_start' => '',
+        'advance_amount' => '',
         'house_rent' => '',
         'gas_charge' => '',
         'parking_charge' => '',
@@ -59,6 +61,8 @@ class Tenants extends Component
             'contact_number' => '',
             'building_id' => '',
             'flat_id' => '',
+            'rent_start' => now()->toDateString(),
+            'advance_amount' => '',
             'house_rent' => '',
             'gas_charge' => '1080',
             'parking_charge' => '',
@@ -87,6 +91,8 @@ class Tenants extends Component
             'contact_number' => $tenant->contact_number,
             'building_id' => $tenancy !== null ? (string) $tenancy->flat->building_id : '',
             'flat_id' => $tenancy !== null ? (string) $tenancy->flat_id : '',
+            'rent_start' => $tenancy !== null ? $tenancy->starts_on->toDateString() : '',
+            'advance_amount' => $tenancy !== null ? (string) (float) $tenancy->advance_amount : '',
             'house_rent' => $tenancy !== null ? (string) (float) $tenancy->house_rent : '',
             'gas_charge' => $tenancy !== null ? (string) (float) $tenancy->gas_charge : '',
             'parking_charge' => $tenancy !== null ? (string) (float) $tenancy->parking_charge : '',
@@ -113,6 +119,8 @@ class Tenants extends Component
                 'integer',
                 Rule::exists('flats', 'id')->where('building_id', $this->tenantForm['building_id']),
             ],
+            'tenantForm.rent_start' => ['required', 'date_format:Y-m-d'],
+            'tenantForm.advance_amount' => ['nullable', 'numeric', 'min:0', 'max:9999999.99'],
             'tenantForm.house_rent' => ['required', 'numeric', 'min:0', 'max:9999999.99'],
             'tenantForm.gas_charge' => ['nullable', 'numeric', 'min:0', 'max:9999999.99'],
             'tenantForm.parking_charge' => ['nullable', 'numeric', 'min:0', 'max:9999999.99'],
@@ -143,16 +151,18 @@ class Tenants extends Component
             ]);
         }
 
-        $charges = [
+        $tenancyAttributes = [
             'house_rent' => round((float) $this->tenantForm['house_rent'], 2),
             'gas_charge' => round((float) ($this->tenantForm['gas_charge'] ?: 0), 2),
             'parking_charge' => round((float) ($this->tenantForm['parking_charge'] ?: 0), 2),
             'service_charge' => round((float) ($this->tenantForm['service_charge'] ?: 0), 2),
+            'advance_amount' => round((float) ($this->tenantForm['advance_amount'] ?: 0), 2),
+            'starts_on' => $this->tenantForm['rent_start'],
         ];
 
         $wasEditing = $this->editingTenantId !== null;
 
-        DB::transaction(function () use ($tenant, $currentTenancy, $flatId, $charges): void {
+        DB::transaction(function () use ($tenant, $currentTenancy, $flatId, $tenancyAttributes): void {
             $tenant->fill([
                 'name' => trim($this->tenantForm['name']),
                 'contact_number' => trim($this->tenantForm['contact_number']),
@@ -161,7 +171,7 @@ class Tenants extends Component
             $tenant->save();
 
             if ($currentTenancy !== null && (int) $currentTenancy->flat_id === $flatId) {
-                $currentTenancy->update($charges);
+                $currentTenancy->update($tenancyAttributes);
 
                 return;
             }
@@ -175,10 +185,9 @@ class Tenants extends Component
                 ]);
             }
 
-            Tenancy::create($charges + [
+            Tenancy::create($tenancyAttributes + [
                 'tenant_id' => $tenant->id,
                 'flat_id' => $flatId,
-                'starts_on' => now()->toDateString(),
                 'ends_on' => null,
                 'active_marker' => 1,
             ]);
@@ -191,6 +200,8 @@ class Tenants extends Component
             'contact_number' => '',
             'building_id' => '',
             'flat_id' => '',
+            'rent_start' => '',
+            'advance_amount' => '',
             'house_rent' => '',
             'gas_charge' => '',
             'parking_charge' => '',

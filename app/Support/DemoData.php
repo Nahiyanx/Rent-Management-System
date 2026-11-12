@@ -68,6 +68,7 @@ final class DemoData
                 'rent' => 28000,
                 'phone' => '01711 204 588',
                 'since' => '2023',
+                'advance' => 56000,
             ],
             [
                 'id' => 2,
@@ -78,6 +79,7 @@ final class DemoData
                 'rent' => 26500,
                 'phone' => '01644 512 907',
                 'since' => '2024',
+                'advance' => 53000,
             ],
             [
                 'id' => 3,
@@ -88,6 +90,7 @@ final class DemoData
                 'rent' => 35000,
                 'phone' => '01822 771 430',
                 'since' => '2022',
+                'advance' => 70000,
             ],
             [
                 'id' => 4,
@@ -98,6 +101,7 @@ final class DemoData
                 'rent' => 38000,
                 'phone' => '01555 663 201',
                 'since' => '2021',
+                'advance' => 76000,
             ],
             [
                 'id' => 5,
@@ -108,6 +112,7 @@ final class DemoData
                 'rent' => 42000,
                 'phone' => '01933 880 215',
                 'since' => '2024',
+                'advance' => 84000,
             ],
             [
                 'id' => 6,
@@ -118,6 +123,7 @@ final class DemoData
                 'rent' => 45000,
                 'phone' => '01777 904 612',
                 'since' => '2023',
+                'advance' => 90000,
             ],
             [
                 'id' => 7,
@@ -128,6 +134,7 @@ final class DemoData
                 'rent' => 25800,
                 'phone' => '01311 447 802',
                 'since' => '2025',
+                'advance' => 51600,
             ],
             [
                 'id' => 8,
@@ -138,6 +145,7 @@ final class DemoData
                 'rent' => 36400,
                 'phone' => '01988 225 741',
                 'since' => '2024',
+                'advance' => 72800,
             ],
         ];
     }

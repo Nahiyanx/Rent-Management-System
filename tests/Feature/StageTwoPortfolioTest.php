@@ -71,7 +71,7 @@ class StageTwoPortfolioTest extends TestCase
         $this->assertDatabaseHas('flats', ['id' => $flat->id]);
     }
 
-    public function test_tenant_can_be_registered_with_a_flat_and_charge_defaults(): void
+    public function test_tenant_can_be_registered_with_rent_start_advance_and_charge_defaults(): void
     {
         $building = Building::factory()->create();
         $flat = Flat::factory()->for($building)->create(['unit_number' => '3A']);
@@ -83,6 +83,8 @@ class StageTwoPortfolioTest extends TestCase
             ->set('tenantForm.contact_number', '01711 000 000')
             ->set('tenantForm.building_id', (string) $building->id)
             ->set('tenantForm.flat_id', (string) $flat->id)
+            ->set('tenantForm.rent_start', '2026-10-15')
+            ->set('tenantForm.advance_amount', 50000)
             ->set('tenantForm.house_rent', 28000)
             ->set('tenantForm.gas_charge', 1080)
             ->set('tenantForm.parking_charge', 1500)
@@ -105,6 +107,30 @@ class StageTwoPortfolioTest extends TestCase
         $this->assertSame(1080.0, (float) $tenancy->gas_charge);
         $this->assertSame(1500.0, (float) $tenancy->parking_charge);
         $this->assertSame(2500.0, (float) $tenancy->service_charge);
+        $this->assertSame(50000.0, (float) $tenancy->advance_amount);
+        $this->assertSame('2026-10-15', $tenancy->starts_on->toDateString());
+    }
+
+    public function test_editing_a_tenant_updates_the_rent_start_and_advance(): void
+    {
+        $tenancy = Tenancy::factory()->create([
+            'starts_on' => '2026-01-01',
+            'advance_amount' => 10000,
+        ]);
+
+        Livewire::test(Tenants::class)
+            ->call('editTenant', $tenancy->tenant_id)
+            ->assertSet('tenantForm.rent_start', '2026-01-01')
+            ->assertSet('tenantForm.advance_amount', '10000')
+            ->set('tenantForm.rent_start', '2026-02-01')
+            ->set('tenantForm.advance_amount', 65000)
+            ->call('saveTenant')
+            ->assertHasNoErrors();
+
+        $tenancy->refresh();
+
+        $this->assertSame('2026-02-01', $tenancy->starts_on->toDateString());
+        $this->assertSame(65000.0, (float) $tenancy->advance_amount);
     }
 
     public function test_two_active_tenancies_cannot_share_a_flat(): void

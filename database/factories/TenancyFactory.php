@@ -26,6 +26,7 @@ class TenancyFactory extends Factory
             'gas_charge' => 1080,
             'parking_charge' => 1500,
             'service_charge' => 2500,
+            'advance_amount' => 50000,
             'starts_on' => now()->subYear()->startOfMonth(),
             'ends_on' => null,
             'active_marker' => 1,

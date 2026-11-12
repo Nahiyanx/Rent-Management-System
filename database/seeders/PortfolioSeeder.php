@@ -65,6 +65,7 @@ class PortfolioSeeder extends Seeder
                     'gas_charge' => 1080,
                     'parking_charge' => in_array($data['name'], ['Farhana Islam', 'Imran Hossain'], true) ? 0 : 1500,
                     'service_charge' => $data['building'] === 'The Orchard' ? 3000 : 2500,
+                    'advance_amount' => $data['advance'],
                     'starts_on' => Carbon::create((int) $data['since'], 1, 1),
                     'ends_on' => null,
                 ],

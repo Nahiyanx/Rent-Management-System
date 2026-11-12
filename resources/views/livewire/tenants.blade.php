@@ -67,7 +67,7 @@
                         </div>
                         <p class="mt-0.5 text-[10.5px] text-espresso/35">
                             @if ($isActive)
-                                Tenant since {{ $tenant->activeTenancy->starts_on->format('M Y') }}
+                                Rent from {{ $tenant->activeTenancy->starts_on->format('d M Y') }}
                             @elseif ($tenancy?->ends_on)
                                 Moved out {{ $tenancy->ends_on->format('M Y') }}
                             @else
@@ -96,6 +96,11 @@
                             —
                         @endif
                     </p>
+                    @if ($tenancy)
+                        <p class="mt-0.5 text-[10.5px] text-espresso/35">
+                            Advance <x-money :amount="$tenancy->advance_amount" />
+                        </p>
+                    @endif
                 </div>
 
                 <div>
@@ -210,6 +215,43 @@
                     </div>
                     <p class="mt-1.5 text-[10px] text-espresso/30">Only vacant flats are listed.</p>
                     @error('tenantForm.flat_id')
+                        <p class="mt-1.5 text-[11px] text-wine">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="grid gap-4 sm:grid-cols-2">
+                <div>
+                    <label for="tenant-rent-start" class="label">Rent start</label>
+                    <input
+                        id="tenant-rent-start"
+                        type="date"
+                        wire:model="tenantForm.rent_start"
+                        class="input"
+                    >
+                    <p class="mt-1.5 text-[10px] text-espresso/30">The date this tenancy starts being billed.</p>
+                    @error('tenantForm.rent_start')
+                        <p class="mt-1.5 text-[11px] text-wine">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="tenant-advance" class="label">Advance amount</label>
+                    <div class="relative">
+                        <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[13px] text-espresso/30">৳</span>
+                        <input
+                            id="tenant-advance"
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            inputmode="decimal"
+                            wire:model="tenantForm.advance_amount"
+                            class="input pl-9"
+                            placeholder="0"
+                        >
+                    </div>
+                    <p class="mt-1.5 text-[10px] text-espresso/30">Security deposit received from the tenant.</p>
+                    @error('tenantForm.advance_amount')
                         <p class="mt-1.5 text-[11px] text-wine">{{ $message }}</p>
                     @enderror
                 </div>
